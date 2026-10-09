@@ -1,0 +1,60 @@
+fleet-checker: n=3 horizon=12 lease=5 schedules=9
+--- broadcast ---
+  sched(0, 'honest'): 0 violations []
+  sched(1, 'honest'): 3 violations ['I7']
+  sched(2, 'honest'): 3 violations ['I7']
+  sched(3, 'honest'): 0 violations []
+  sched(4, 'honest'): 0 violations []
+  sched(5, 'stale'): 33 violations ['I3']
+  sched(6, 'honest'): 4 violations ['I5']
+  sched(7, 'honest'): 0 violations []
+  sched(8, 'honest'): 6 violations ['I5', 'I6']
+--- 2pc ---
+  sched(0, 'honest'): 0 violations []
+  sched(1, 'honest'): 3 violations ['I7']
+  sched(2, 'honest'): 3 violations ['I7']
+  sched(3, 'honest'): 0 violations []
+  sched(4, 'honest'): 0 violations []
+  sched(5, 'stale'): 27 violations ['I3']
+  sched(6, 'honest'): 2 violations ['I5']
+  sched(7, 'honest'): 3 violations ['I1']
+  sched(8, 'honest'): 8 violations ['I5', 'I6']
+--- efrs ---
+  sched(0, 'honest'): 0 violations []
+  sched(1, 'honest'): 0 violations []
+  sched(2, 'honest'): 0 violations []
+  sched(3, 'honest'): 0 violations []
+  sched(4, 'honest'): 0 violations []
+  sched(5, 'stale'): 0 violations []
+  sched(6, 'honest'): 0 violations []
+  sched(7, 'honest'): 0 violations []
+  sched(8, 'honest'): 0 violations []
+=== headline: partitioned-robot stale rule window (S1) ===
+  broadcast: R3 epoch-0 executions at t>=5: [5, 6, 7]
+  2pc: R3 epoch-0 executions at t>=5: [5, 6, 7]
+  efrs: R3 epoch-0 executions at t>=5: [5, 6]
+=== I5 stale bound on long partition (S6, no heal) ===
+  broadcast: max stale ticks after commit = 9 (BOUND=5)
+  2pc: max stale ticks after commit = 7 (BOUND=5)
+  efrs: max stale ticks after commit = 1 (BOUND=5)
+=== counterexample trace: 2PC S1 (first 16 lines) ===
+  t=0 R1 executes (req 0, local 0)
+  t=0 R2 executes (req 0, local 0)
+  t=0 R3 executes (req 0, local 0)
+  t=1 R1 executes (req 0, local 0)
+  t=1 R2 executes (req 0, local 0)
+  t=1 R3 executes (req 0, local 0)
+  t=2 PARTITION [[0, 1, 2], [3]]
+  t=2 R1 executes (req 0, local 0)
+  t=2 R2 executes (req 0, local 0)
+  t=2 R3 executes (req 0, local 0)
+  t=3 C proposes epoch 1 fence 1
+  t=3 R1 executes (req 0, local 0)
+  t=3 R2 executes (req 0, local 0)
+  t=3 R3 executes (req 0, local 0)
+  t=4 R1 executes (req 0, local 0)
+  t=4 R2 executes (req 0, local 0)
+=== fuzz (200 seeds x 3 protocols x honest+stale) ===
+  broadcast: invariant kinds hit in fuzz: ['I3', 'I5', 'I7']
+  2pc: invariant kinds hit in fuzz: ['I1', 'I3', 'I5', 'I7']
+  efrs: invariant kinds hit in fuzz: []
