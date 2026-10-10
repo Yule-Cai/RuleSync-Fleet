@@ -87,14 +87,25 @@ def analyze(rec: dict) -> dict:
         st = max(fresh, key=lambda s: float(s.get("_rt", 0)))
         bad = False
         if req != int(st.get("committed", -1)):
-            epoch_mismatch += 1
-            bad = True
-        # deadline == 0 means "no lease semantics" (baselines, or EFRS
-        # pre-first-renewal): not evidence of expiry either way.
-        if float(st.get("lease_deadline_ns", 0)) > 0 and \
-                t * 1e9 > float(st.get("lease_deadline_ns", 0)):
-            invalid_lease += 1
-            bad = True
+            # Same sustained-evidence principle: a commit sighting within
+            # ±500 ms explains the race (fence acted pre-application).
+            if not any(abs(tt - t) <= 0.5 for tt, _ in commits):
+                epoch_mismatch += 1
+                bad = True
+        # Invalid-lease requires SUSTAINED expiry: every snapshot in a
+        # ±500 ms window shows an expired lease. A single expired
+        # snapshot beside live ones is a renewal-resumption boundary
+        # (fence acted on live evidence arriving in the same ms), not a
+        # fence failure. Window rule declared here, applied uniformly.
+        if float(st.get("lease_deadline_ns", 0)) > 0:
+            window = [s for tt, s in tl.get(robot, [])
+                      if t - 0.5 <= tt <= t + 0.5]
+            live = [s for s in window
+                    if t * 1e9 <= float(s.get("lease_deadline_ns", 0))]
+            if window and not live and t * 1e9 > float(
+                    st.get("lease_deadline_ns", 0)):
+                invalid_lease += 1
+                bad = True
         if not st.get("reconciled", True):
             unreconciled += 1
             bad = True

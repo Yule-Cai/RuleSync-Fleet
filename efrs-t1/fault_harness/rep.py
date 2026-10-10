@@ -74,6 +74,9 @@ def main() -> None:
     agg = []
     for rep in range(args.reps):
         sweep()
+        if (outdir / f"rec-{args.protocol}-{args.fault}-r{rep}.json").exists():
+            print(json.dumps({"rep": rep, "skipped": True}), flush=True)
+            continue
         sched = seed_shift(base, rep)
         spath = outdir / f"sched-{args.protocol}-{args.fault}-r{rep}.json"
         spath.write_text(json.dumps(sched, indent=1, sort_keys=True))

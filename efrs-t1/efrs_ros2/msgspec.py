@@ -93,9 +93,14 @@ def verify_rules(snap_hash: str, rules) -> bool:
         return False
 
 
-def renew_msg(epoch: int, fence: int, tick: int, rules=None):
+def renew_msg(epoch: int, fence: int, tick: int, rules=None,
+              snap_hash: str = ""):
+    if rules is None:
+        claimed = str(snap_hash)
+    else:
+        claimed = canonical_rules_hash(list(rules))
     return {"v": WIRE, "epoch": int(epoch), "fence": int(fence),
-            "tick": int(tick),
+            "tick": int(tick), "hash": claimed,
             "rules": list(rules) if rules is not None else []}
 
 

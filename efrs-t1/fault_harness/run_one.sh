@@ -4,7 +4,7 @@
 set -e
 PROTO="$1"; FAULT="$2"; DOMAIN="$3"; TAG="$4"
 SCHEDDIR="$5"; OUTDIR="$6"
-mkdir -p "$OUTDIR"
+# NOTE: no mkdir here (container paths); the runner creates out dirs.
 podman run --rm --shm-size=2g -v /home/gamer/RuleSync-Fleet:/ws \
   -w /ws/efrs-t1 -e ROS_DOMAIN_ID="$DOMAIN" d1-lyrical bash -lc \
   "source /opt/ros/lyrical/setup.bash && /opt/venv/bin/python \

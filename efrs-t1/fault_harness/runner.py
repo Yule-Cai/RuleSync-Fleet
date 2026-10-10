@@ -68,6 +68,9 @@ class Runner:
             [self.python, str(self.repo / script)] + args,
             env=self._env(), stdout=log, stderr=subprocess.STDOUT)
         self.procs[name] = p
+        # Stagger discovery load: simultaneous rclpy.init storms kill
+        # spins (observed at 21 nodes; D1-era 4-way abort precedent).
+        time.sleep(1.5)
         return p
 
     def spawn_stack(self, protocol, robots):
@@ -187,30 +190,41 @@ class Runner:
         A = lambda payload: self.admin({"op": "fault", "fault": payload})
         C = lambda fid, tgt, act, match=None, params=None: A(
             self.F(fid, tgt, act, match, params))
-        if kind == "partition":
-            r, until = f["robot"], f["until"]
-            # Bilateral protocol block. Fault plane ONLY:
-            # {prepare,commit,renew,reconcile_rep} inbound,
-            # {vote,state,reconcile_req} outbound.
-            # Stimulus (motion_cmd, admin) and evidence (motion_event)
-            # planes are NEVER faulted (harness instrumentation).
-            for k in ("prepare", "commit", "renew", "reconcile_rep"):
-                C(f"part-{r}-in-{k}", r, "drop", {"msg_kind": k})
-            for k in ("vote", "state", "reconcile_req"):
-                C(f"part-{r}-out-{k}", r, "drop", {"msg_kind": k})
-            C(f"part-C-{r}", "coordinator", "drop",
-              {"msg_kind": "vote", "robot": r})
-            C(f"part-C-{r}-req", "coordinator", "drop",
-              {"msg_kind": "reconcile_req", "robot": r})
-            pairs = ([(f"part-{r}-in-{k}", r) for k in
-                      ("prepare", "commit", "renew", "reconcile_rep")]
-                     + [(f"part-{r}-out-{k}", r) for k in
-                        ("vote", "state", "reconcile_req")]
-                     + [(f"part-C-{r}", "coordinator"),
-                        (f"part-C-{r}-req", "coordinator")])
+        if kind in ("partition", "partition5"):
+            # Star protocol: robots never address peers directly, so any
+            # isolate is blocked from everyone on the fault plane. Topology
+            # labels stay in the schedule record for the report.
+            if kind == "partition":
+                members = [f["robot"]]
+            else:
+                members = sorted({m for g in f["groups"] for m in g
+                                  if m != "C"})
+            until = f["until"]
+            # Bilateral protocol block. Fault plane ONLY (stimulus and
+            # evidence planes are harness instrumentation, never faulted).
+            pairs = []
+            tag = "p5" if kind == "partition5" else "part"
+            for r in members:
+                for k in ("prepare", "commit", "renew", "reconcile_rep"):
+                    fid = f"{tag}-{r}-in-{k}"
+                    C(fid, r, "drop", {"msg_kind": k})
+                    pairs.append((fid, r))
+                for k in ("vote", "state", "reconcile_req"):
+                    fid = f"{tag}-{r}-out-{k}"
+                    C(fid, r, "drop", {"msg_kind": k})
+                    pairs.append((fid, r))
+                fid = f"{tag}-C-{r}"
+                C(fid, "coordinator", "drop",
+                  {"msg_kind": "vote", "robot": r})
+                pairs.append((fid, "coordinator"))
+                fid = f"{tag}-C-{r}-req"
+                C(fid, "coordinator", "drop",
+                  {"msg_kind": "reconcile_req", "robot": r})
+                pairs.append((fid, "coordinator"))
+            heallabel = f"heal-{members}"
             self.at(until - self.elapsed(),
                     lambda: [C(fid, tgt, "clear") for fid, tgt in pairs],
-                    f"heal-{r}")
+                    heallabel)
         elif kind == "delay":
             tgt = f.get("node", None)
             mk, ms = f["msg_kind"], int(f["ms"])
@@ -266,9 +280,11 @@ class Runner:
                     lambda: [C(f"f15-{r}", r, "clear") for r in targets],
                     "unf15")
         elif kind == "mutate":
+            match = {"msg_kind": f.get("msg_kind", "commit")}
+            if "epoch" in f:
+                match["epoch"] = f["epoch"]
             C(f["fid"], f.get("node", "coordinator"), "mutate",
-              {"msg_kind": f.get("msg_kind", "commit")},
-              {"set": f.get("set", {})})
+              match, {"set": f.get("set", {})})
 
     def _senders(self, msg_kind: str):
         if msg_kind in ("commit", "prepare", "renew"):
@@ -383,6 +399,7 @@ class Runner:
                   "events": self.events, "states": self.states,
                   "commits_seen": self.commits_seen,
                   "truncated": truncated,
+                  "runner_sha256": _sha_of_self(),
                   "metrics": metrics}
         self.out.write_text(json.dumps(record, indent=2, sort_keys=True)
                             + "\n")
@@ -467,6 +484,15 @@ def rclpy_spin(node):
         rclpy.spin_once(node, timeout_sec=0.05)
     except Exception:
         pass
+
+
+def _sha_of_self() -> str:
+    import hashlib
+
+    try:
+        return hashlib.sha256(Path(__file__).read_bytes()).hexdigest()[:12]
+    except Exception:
+        return "unknown"
 
 
 def main() -> None:

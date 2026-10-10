@@ -13,12 +13,13 @@ ROBOTS5 = ["R1", "R2", "R3", "R4", "R5"]
 DUR = 16.0
 
 
-def base(protocol, faults=(), proposes=None, robots=None, duration=DUR):
+def base(protocol, faults=(), proposes=None, robots=None, duration=DUR,
+         motion_plan="honest"):
     return {"protocol": protocol, "robots": list(robots or ROBOTS5),
             "duration_s": duration, "vote_timeout_ms": 1500,
             "proposes": proposes if proposes is not None else [
                 {"t": 1.5, "epoch": 1}, {"t": 6.0, "epoch": 2}],
-            "faults": list(faults), "motion_plan": "honest"}
+            "faults": list(faults), "motion_plan": motion_plan}
 
 
 def part5(isolates, t0, t1):
