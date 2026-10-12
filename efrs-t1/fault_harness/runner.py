@@ -387,7 +387,8 @@ class Runner:
             self.run_timed()
             if now - last_motion >= 0.2:
                 last_motion = now
-                self.motion_tick()
+                if self.sched.get("motion_source", "runner") == "runner":
+                    self.motion_tick()
         # drain
         for _ in range(20):
             try:
@@ -503,9 +504,14 @@ def main() -> None:
     ap.add_argument("--repo", type=Path, required=True)
     ap.add_argument("--python", default=sys.executable)
     ap.add_argument("--settle-s", type=float, default=3.0)
+    ap.add_argument("--motion-source", default="runner",
+                    choices=("runner", "external"),
+                    help="witness mode: external waypoint drivers feed "
+                    "motion_cmd; runner only faults/proposes/metrics")
     args = ap.parse_args()
 
     sched = json.loads(Path(args.schedule).read_text())
+    sched["motion_source"] = args.motion_source
     out = Path(args.out)
     if out.exists():
         raise FileExistsError(f"refusing to overwrite record: {out}")
