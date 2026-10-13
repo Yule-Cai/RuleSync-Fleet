@@ -1,3 +1,4 @@
-model/states/
+efrs-t11/model/states/
+efrs-t0/model/states/
 __pycache__/
 *.pyc
