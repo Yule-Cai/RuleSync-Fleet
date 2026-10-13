@@ -1,0 +1,363 @@
+{
+ "duration_s": 600.0,
+ "faults": [
+  {
+   "kind": "loss_random",
+   "p": 0.2,
+   "seed": 5,
+   "t": 5.0,
+   "until": 8.0
+  },
+  {
+   "groups": [
+    [
+     "R19"
+    ],
+    [
+     "R6"
+    ],
+    [
+     "R1"
+    ]
+   ],
+   "kind": "partition5",
+   "t": 10.3,
+   "until": 13.53
+  },
+  {
+   "groups": [
+    [
+     "R11"
+    ],
+    [
+     "R16"
+    ]
+   ],
+   "kind": "partition5",
+   "t": 19.27,
+   "until": 24.12
+  },
+  {
+   "kind": "loss_random",
+   "p": 0.2,
+   "seed": 25,
+   "t": 25.52,
+   "until": 28.52
+  },
+  {
+   "kind": "delay",
+   "ms": 300,
+   "msg_kind": "commit",
+   "t": 30.51
+  },
+  {
+   "groups": [
+    [
+     "R13"
+    ],
+    [
+     "R3"
+    ],
+    [
+     "R7"
+    ],
+    [
+     "R8"
+    ]
+   ],
+   "kind": "partition5",
+   "t": 36.16,
+   "until": 38.26
+  },
+  {
+   "kind": "loss_random",
+   "p": 0.2,
+   "seed": 40,
+   "t": 40.63,
+   "until": 43.63
+  },
+  {
+   "kind": "delay",
+   "ms": 300,
+   "msg_kind": "commit",
+   "t": 45.9
+  },
+  {
+   "kind": "delay",
+   "ms": 300,
+   "msg_kind": "commit",
+   "t": 51.42
+  },
+  {
+   "groups": [
+    [
+     "R9"
+    ]
+   ],
+   "kind": "partition5",
+   "t": 56.24,
+   "until": 60.36
+  },
+  {
+   "kind": "loss_random",
+   "p": 0.2,
+   "seed": 64,
+   "t": 64.54,
+   "until": 67.54
+  },
+  {
+   "groups": [
+    [
+     "R20"
+    ]
+   ],
+   "kind": "partition5",
+   "t": 71.41,
+   "until": 74.31
+  },
+  {
+   "kind": "delay",
+   "ms": 300,
+   "msg_kind": "commit",
+   "t": 76.09
+  },
+  {
+   "kind": "crash_robot",
+   "restart_at": 86.09,
+   "robot": "R5",
+   "t": 83.09
+  },
+  {
+   "kind": "delay",
+   "ms": 300,
+   "msg_kind": "commit",
+   "t": 91.7
+  },
+  {
+   "kind": "crash_robot",
+   "restart_at": 101.48,
+   "robot": "R6",
+   "t": 98.48
+  },
+  {
+   "groups": [
+    [
+     "R19"
+    ],
+    [
+     "R14"
+    ]
+   ],
+   "kind": "partition5",
+   "t": 103.3,
+   "until": 106.34
+  },
+  {
+   "kind": "loss_random",
+   "p": 0.2,
+   "seed": 112,
+   "t": 112.14,
+   "until": 115.14
+  },
+  {
+   "kind": "loss_random",
+   "p": 0.2,
+   "seed": 118,
+   "t": 118.33,
+   "until": 121.33
+  },
+  {
+   "groups": [
+    [
+     "R1"
+    ],
+    [
+     "R11"
+    ],
+    [
+     "R13"
+    ]
+   ],
+   "kind": "partition5",
+   "t": 126.52,
+   "until": 131.38
+  },
+  {
+   "groups": [
+    [
+     "R4"
+    ],
+    [
+     "R15"
+    ]
+   ],
+   "kind": "partition5",
+   "t": 133.17,
+   "until": 136.85
+  },
+  {
+   "groups": [
+    [
+     "R9"
+    ],
+    [
+     "R3"
+    ],
+    [
+     "R10"
+    ]
+   ],
+   "kind": "partition5",
+   "t": 144.97,
+   "until": 148.96
+  },
+  {
+   "kind": "loss_random",
+   "p": 0.2,
+   "seed": 152,
+   "t": 152.91,
+   "until": 155.91
+  },
+  {
+   "kind": "loss_random",
+   "p": 0.2,
+   "seed": 165,
+   "t": 165.51,
+   "until": 168.51
+  },
+  {
+   "kind": "delay",
+   "ms": 300,
+   "msg_kind": "commit",
+   "t": 178.11
+  },
+  {
+   "kind": "crash_robot",
+   "restart_at": 189.49,
+   "robot": "R9",
+   "t": 186.49
+  },
+  {
+   "groups": [
+    [
+     "R8"
+    ],
+    [
+     "R7"
+    ]
+   ],
+   "kind": "partition5",
+   "t": 191.03,
+   "until": 195.61
+  },
+  {
+   "kind": "loss_random",
+   "p": 0.2,
+   "seed": 195,
+   "t": 195.52,
+   "until": 198.52
+  },
+  {
+   "kind": "loss_random",
+   "p": 0.2,
+   "seed": 202,
+   "t": 202.3,
+   "until": 205.3
+  },
+  {
+   "kind": "crash_robot",
+   "restart_at": 212.54,
+   "robot": "R16",
+   "t": 209.54
+  },
+  {
+   "kind": "loss_random",
+   "p": 0.2,
+   "seed": 213,
+   "t": 213.55,
+   "until": 216.55
+  },
+  {
+   "kind": "delay",
+   "ms": 300,
+   "msg_kind": "commit",
+   "t": 221.62
+  },
+  {
+   "groups": [
+    [
+     "R7"
+    ],
+    [
+     "R12"
+    ],
+    [
+     "R10"
+    ]
+   ],
+   "kind": "partition5",
+   "t": 227.65,
+   "until": 230.08
+  },
+  {
+   "groups": [
+    [
+     "R2"
+    ],
+    [
+     "R13"
+    ],
+    [
+     "R12"
+    ]
+   ],
+   "kind": "partition5",
+   "t": 235.28,
+   "until": 239.48
+  },
+  {
+   "kind": "crash_robot",
+   "restart_at": 243.69,
+   "robot": "R4",
+   "t": 240.69
+  },
+  {
+   "kind": "crash_robot",
+   "restart_at": 248.02,
+   "robot": "R7",
+   "t": 245.02
+  }
+ ],
+ "motion_plan": "honest",
+ "n_updates": 100,
+ "propose_mode": "sequential",
+ "protocol": "efrs",
+ "robots": [
+  "R1",
+  "R2",
+  "R3",
+  "R4",
+  "R5",
+  "R6",
+  "R7",
+  "R8",
+  "R9",
+  "R10",
+  "R11",
+  "R12",
+  "R13",
+  "R14",
+  "R15",
+  "R16",
+  "R17",
+  "R18",
+  "R19",
+  "R20"
+ ],
+ "vote_timeout_ms": 1500,
+ "w_heal": {
+  "derived_from": "efrs-t1 sched-scale20.json",
+  "gst": 248.02,
+  "loss_lifetime_ms": 3000
+ }
+}
