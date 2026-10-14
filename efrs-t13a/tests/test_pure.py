@@ -299,6 +299,56 @@ def test_loss_random_branch_schedules_clear():
     assert "unlossr" in seg, "independent per-fault clear missing"
 
 
+def test_old_renewal_never_adopts():
+    # A3 amendment: under --old-renewal, a newer RENEW must NEVER
+    # change committed epoch/hash (T1-exact: extend-without-adopt).
+    import ast as _ast
+    src = (Path(__file__).resolve().parents[1] / "efrs_ros2" /
+           "robot_agent" / "robot_agent.py").read_text()
+    tree = _ast.parse(src)
+    fns = {n.name: n for n in _ast.walk(tree)
+           if isinstance(n, _ast.FunctionDef)}
+    on_renew = fns["on_renew"]
+    olds = [n for n in _ast.walk(on_renew)
+            if isinstance(n, _ast.If)
+            and _ast.dump(n.test) == _ast.dump(
+                _ast.parse("args.old_renewal").body[0].value)]
+    assert len(olds) == 1, "old_renewal branch not found exactly once"
+    body = _ast.dump(olds[0])
+    assert 'st["committed"]' not in body \
+        and "st['committed']" not in body, \
+        "old_renewal branch touches committed epoch"
+    assert '"hash"' not in body and "'hash'" not in body, \
+        "old_renewal branch touches hash"
+    assert "persist()" not in body, \
+        "old_renewal branch persists state"
+    assert "lease_deadline_ns" in body, \
+        "old_renewal branch must still extend the lease"
+
+
+def test_normal_renew_keeps_frozen_semantics():
+    # Normal EFRS path unchanged: RENEW never assigns committed (pull
+    # instead of adopt); adoption lives only in apply()/reconcile_rep.
+    import ast as _ast
+    src = (Path(__file__).resolve().parents[1] / "efrs_ros2" /
+           "robot_agent" / "robot_agent.py").read_text()
+    tree = _ast.parse(src)
+    fns = {n.name: n for n in _ast.walk(tree)
+           if isinstance(n, _ast.FunctionDef)}
+    stores = [n for n in _ast.walk(fns["on_renew"])
+              if isinstance(n, _ast.Subscript)
+              and isinstance(n.ctx, _ast.Store)
+              and isinstance(n.value, _ast.Name)
+              and n.value.id == "st"
+              and isinstance(n.slice, _ast.Constant)
+              and n.slice.value in ("committed", "hash", "prepared")]
+    assert not stores, "on_renew assigns committed/hash/prepared"
+    for keeper in ("apply", "on_reconcile_rep"):
+        ksrc = _ast.dump(fns[keeper])
+        assert "committed" in ksrc, \
+            f"{keeper} lost its adoption assignment"
+
+
 if __name__ == "__main__":
     test_msgspec_validation()
     test_shim_drop_duplicate_delay()
@@ -313,4 +363,6 @@ if __name__ == "__main__":
     test_txn_qos_contracts()
     test_sched_util_gst()
     test_loss_random_branch_schedules_clear()
+    test_old_renewal_never_adopts()
+    test_normal_renew_keeps_frozen_semantics()
     print("efrs pure proofs passed")
