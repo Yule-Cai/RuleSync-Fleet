@@ -27,6 +27,7 @@ def main() -> None:
 
     rows = []
     ledgers_found = 0
+    unreadable = []
     for path in sorted(glob.glob(str(args.procs / "ledger-*.jsonl"))):
         ledgers_found += 1
         try:
@@ -34,10 +35,12 @@ def main() -> None:
                 line = line.strip()
                 if line:
                     d = json.loads(line)
-                    if d.get("v") == "efrs-ledger-v1":
-                        rows.append((path.name, d))
-        except Exception:
-            pass
+                    if "decision" in d:
+                        rows.append((Path(path).name, d))
+        except Exception as e:
+            # A missing/corrupt ledger makes the run evidence-incomplete
+            # (never PASS) — recorded, never silently skipped.
+            unreadable.append(f"{Path(path).name}:{type(e).__name__}")
     accepts = [r for _, r in rows if r.get("decision") == "ACCEPT"]
     bad_expiry = [r for r in accepts
                   if r.get("monotonic_ns") is None
@@ -58,6 +61,7 @@ def main() -> None:
     uncovered = [e.get("cmd_id") for e in ev_accepts
                  if e.get("cmd_id") not in ledger_cmds]
     out = {"ledgers_found": ledgers_found,
+           "unreadable_ledgers": unreadable,
            "ledger_rows": len(rows),
            "accepts": len(accepts),
            "accepted_after_expiry": len(bad_expiry),
@@ -68,6 +72,7 @@ def main() -> None:
            "unverifiable_accepts": len(uncovered),
            "gate_ok": (not bad_expiry and not bad_epoch and not bad_hash
                        and not bad_recon and not uncovered
+                       and not unreadable
                        and ledgers_found > 0)}
     print(json.dumps(out, sort_keys=True))
 
