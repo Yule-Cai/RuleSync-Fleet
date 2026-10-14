@@ -46,12 +46,23 @@ certificate code).
 
 ## Theorem 3 — Cost/optimality characterization (candidate)
 
-CAFA-J is EXACT within the frozen discrete model (A* + admissible
-heuristic + exhaustive T scan). Mechanical check (G4): per-instance
-cost equality with B4 exhaustive DP; any gap must be explained by a
-named mechanism (heuristic inadmissibility bug, pruning unsoundness,
-or model mismatch) — an unexplained gap REFUTES exactness → the
-claim downgrades to heuristic and G4 FAILS.
+CAFA-J is a HEURISTIC (prioritized order enumeration over exact
+per-robot optima). It is NOT claimed exact: joint optima requiring
+true simultaneity beyond orderings can be missed. The gap is
+MEASURED three ways (triangulated G4, frozen — B4-joint alone cannot
+cover coupled cases: demonstrated intractable plateaus even at 2
+robots with RD pipeline variants, so G4 does not depend on it
+alone): (a) SEED AGREEMENT: CAFA(seed=0) vs CAFA(seed=1, reversed
+order enumeration) must agree in cost on every instance; (b) LOCAL
+OPTIMALITY: no single-robot deviation (exact low-level replan
+holding others fixed) improves any CAFA plan; (c) B4 EXACT
+AGREEMENT where B4 completes (joint-Dijkstra with incumbent bound,
+2-active-robot scope, node-guard LIMITs): B4-PROVEN/TIE at equal
+cost = STRONG agreement; B4-BEAT = quantified CAFA suboptimality
+(G4 fails — always real); B4-LIMIT = scope note; B4-INFEASIBLE vs
+CAFA-CERTIFIED (or vice versa) = red flag with manual forensics.
+If (a) disagrees, (b) finds improvements, or (c) beats CAFA-J on
+coupled families, the heuristic is inadequate and G4 FAILS.
 
 ## Limitations (predeclared)
 

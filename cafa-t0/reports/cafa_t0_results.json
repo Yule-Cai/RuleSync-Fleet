@@ -1,0 +1,768 @@
+{
+ "S10_tripwire_equal": true,
+ "T0_probe_violation_found": true,
+ "methods": [
+  "CAFA-J",
+  "B0",
+  "B1",
+  "B2",
+  "B3",
+  "B4"
+ ],
+ "scenarios": {
+  "S1": {
+   "B0": {
+    "T": null,
+    "cost": null,
+    "false_safe": 0,
+    "reason": "B0: joint gate: R2 not stopped by horizon",
+    "verdict": "INFEASIBLE",
+    "wall_s": 0.147
+   },
+   "B1": {
+    "T": null,
+    "cost": null,
+    "false_safe": 0,
+    "reason": "B1: joint gate: R2 not stopped by horizon",
+    "verdict": "INFEASIBLE",
+    "wall_s": 0.192
+   },
+   "B2": {
+    "T": null,
+    "cost": null,
+    "false_safe": 0,
+    "reason": "B2: R2 no greedy path",
+    "verdict": "INFEASIBLE",
+    "wall_s": 0.059
+   },
+   "B3": {
+    "T": null,
+    "cost": null,
+    "false_safe": 0,
+    "reason": "B3: no timed T certifies",
+    "verdict": "INFEASIBLE",
+    "wall_s": 0.111
+   },
+   "B4": {
+    "T": null,
+    "cost": null,
+    "limited": true,
+    "local_gap": 0,
+    "proven": false,
+    "reason": "B4 scope: >2 active robots",
+    "seed_agree": true,
+    "verdict": "LIMIT",
+    "wall_s": 0.0
+   },
+   "CAFA-J": {
+    "T": 2,
+    "cost": 8,
+    "false_safe": 0,
+    "plan": {
+     "R1": [
+      "ADVANCE",
+      "ACCEL",
+      "HOLD"
+     ],
+     "R2": [
+      "HOLD",
+      "HOLD",
+      "HOLD",
+      "ACCEL",
+      "ACCEL",
+      "HOLD"
+     ],
+     "R3": [
+      "TURN_L",
+      "ACCEL",
+      "ADVANCE",
+      "ACCEL",
+      "TURN_L",
+      "ACCEL",
+      "HOLD"
+     ]
+    },
+    "reason": "T=2",
+    "verdict": "CERTIFIED",
+    "wall_s": 4.443
+   }
+  },
+  "S10": {
+   "B0": {
+    "T": null,
+    "cost": null,
+    "false_safe": 0,
+    "reason": "B0: joint gate: R2 suffix illegal from stale state",
+    "verdict": "INFEASIBLE",
+    "wall_s": 0.004
+   },
+   "B1": {
+    "T": 7,
+    "cost": 30,
+    "false_safe": 0,
+    "plan": {
+     "R1": [
+      "ADVANCE",
+      "ACCEL",
+      "BRAKE",
+      "BRAKE",
+      "BRAKE",
+      "TURN_L",
+      "TURN_L",
+      "ACCEL",
+      "HOLD"
+     ],
+     "R2": [
+      "ADVANCE",
+      "ACCEL",
+      "BRAKE",
+      "BRAKE",
+      "BRAKE",
+      "TURN_L",
+      "TURN_L",
+      "ACCEL",
+      "HOLD"
+     ]
+    },
+    "reason": "B1: T=7",
+    "verdict": "CERTIFIED",
+    "wall_s": 0.014
+   },
+   "B2": {
+    "T": 2,
+    "cost": 0,
+    "false_safe": 0,
+    "plan": {
+     "R1": [
+      "ADVANCE",
+      "ACCEL",
+      "HOLD"
+     ],
+     "R2": [
+      "ADVANCE",
+      "ACCEL",
+      "HOLD"
+     ]
+    },
+    "reason": "B2: T=2",
+    "verdict": "CERTIFIED",
+    "wall_s": 0.007
+   },
+   "B3": {
+    "T": 2,
+    "cost": 0,
+    "false_safe": 0,
+    "plan": {
+     "R1": [
+      "ADVANCE",
+      "ACCEL",
+      "HOLD"
+     ],
+     "R2": [
+      "ADVANCE",
+      "ACCEL",
+      "HOLD"
+     ]
+    },
+    "reason": "B3: T=2",
+    "verdict": "CERTIFIED",
+    "wall_s": 0.006
+   },
+   "B4": {
+    "T": 2,
+    "cost": 0,
+    "limited": false,
+    "local_gap": 0,
+    "proven": true,
+    "reason": "B4 proven optimal",
+    "seed_agree": true,
+    "verdict": "TIE",
+    "wall_s": 0.766
+   },
+   "CAFA-J": {
+    "T": 2,
+    "cost": 0,
+    "false_safe": 0,
+    "plan": {
+     "R1": [
+      "ADVANCE",
+      "ACCEL",
+      "HOLD"
+     ],
+     "R2": [
+      "ADVANCE",
+      "ACCEL",
+      "HOLD"
+     ]
+    },
+    "reason": "T=2",
+    "verdict": "CERTIFIED",
+    "wall_s": 0.134
+   }
+  },
+  "S2": {
+   "B0": {
+    "T": null,
+    "cost": null,
+    "false_safe": 0,
+    "reason": "B0: resume deadlocked",
+    "verdict": "INFEASIBLE",
+    "wall_s": 0.212
+   },
+   "B1": {
+    "T": null,
+    "cost": null,
+    "false_safe": 0,
+    "reason": "B1: resume deadlocked",
+    "verdict": "INFEASIBLE",
+    "wall_s": 0.192
+   },
+   "B2": {
+    "T": null,
+    "cost": null,
+    "false_safe": 0,
+    "reason": "B2: R1 no greedy path",
+    "verdict": "INFEASIBLE",
+    "wall_s": 0.141
+   },
+   "B3": {
+    "T": null,
+    "cost": null,
+    "false_safe": 0,
+    "reason": "B3: no timed T certifies",
+    "verdict": "INFEASIBLE",
+    "wall_s": 0.068
+   },
+   "B4": {
+    "T": null,
+    "cost": null,
+    "limited": true,
+    "local_gap": null,
+    "proven": false,
+    "reason": "B4 scope: >2 active robots",
+    "seed_agree": true,
+    "verdict": "LIMIT",
+    "wall_s": 0.0
+   },
+   "CAFA-J": {
+    "T": null,
+    "cost": null,
+    "false_safe": 0,
+    "reason": "no certified (order, T) in [C,D]",
+    "verdict": "INFEASIBLE",
+    "wall_s": 34.25
+   }
+  },
+  "S3": {
+   "B0": {
+    "T": null,
+    "cost": null,
+    "false_safe": 0,
+    "reason": "B0: joint gate: R1 tube enters zone at t=5",
+    "verdict": "INFEASIBLE",
+    "wall_s": 0.001
+   },
+   "B1": {
+    "T": null,
+    "cost": null,
+    "false_safe": 0,
+    "reason": "B1: joint gate: R1 tube enters zone at t=7",
+    "verdict": "INFEASIBLE",
+    "wall_s": 0.006
+   },
+   "B2": {
+    "T": null,
+    "cost": null,
+    "false_safe": 0,
+    "reason": "B2: joint gate: R1 tube enters zone at t=2",
+    "verdict": "INFEASIBLE",
+    "wall_s": 0.002
+   },
+   "B3": {
+    "T": null,
+    "cost": null,
+    "false_safe": 0,
+    "reason": "B3: no timed T certifies",
+    "verdict": "INFEASIBLE",
+    "wall_s": 0.008
+   },
+   "B4": {
+    "T": null,
+    "cost": null,
+    "limited": true,
+    "local_gap": 0,
+    "proven": false,
+    "reason": "B4: node guard, no incumbent",
+    "seed_agree": true,
+    "verdict": "LIMIT",
+    "wall_s": 266.941
+   },
+   "CAFA-J": {
+    "T": 10,
+    "cost": 23,
+    "false_safe": 8,
+    "plan": {
+     "R1": [
+      "ADVANCE",
+      "HOLD",
+      "TURN_L",
+      "TURN_L",
+      "ACCEL",
+      "ACCEL"
+     ],
+     "R2": [
+      "ADVANCE",
+      "ACCEL",
+      "HOLD"
+     ]
+    },
+    "reason": "T=10",
+    "verdict": "CERTIFIED",
+    "wall_s": 32.211
+   }
+  },
+  "S4": {
+   "B0": {
+    "T": null,
+    "cost": null,
+    "false_safe": 0,
+    "reason": "B0: joint gate: R1 tube enters zone at t=5",
+    "verdict": "INFEASIBLE",
+    "wall_s": 0.003
+   },
+   "B1": {
+    "T": 7,
+    "cost": 27,
+    "false_safe": 0,
+    "plan": {
+     "R1": [
+      "ACCEL",
+      "HOLD",
+      "BRAKE",
+      "HOLD",
+      "HOLD",
+      "HOLD",
+      "HOLD",
+      "HOLD",
+      "HOLD"
+     ],
+     "R2": [
+      "ADVANCE",
+      "ACCEL",
+      "BRAKE",
+      "BRAKE",
+      "BRAKE",
+      "TURN_L",
+      "TURN_L",
+      "ACCEL",
+      "HOLD"
+     ],
+     "R3": []
+    },
+    "reason": "B1: T=7",
+    "verdict": "CERTIFIED",
+    "wall_s": 0.01
+   },
+   "B2": {
+    "T": 2,
+    "cost": 0,
+    "false_safe": 0,
+    "plan": {
+     "R1": [
+      "ACCEL",
+      "HOLD"
+     ],
+     "R2": [
+      "ADVANCE",
+      "ACCEL",
+      "HOLD"
+     ],
+     "R3": []
+    },
+    "reason": "B2: T=2",
+    "verdict": "CERTIFIED",
+    "wall_s": 0.005
+   },
+   "B3": {
+    "T": 2,
+    "cost": 0,
+    "false_safe": 0,
+    "plan": {
+     "R1": [
+      "ACCEL",
+      "HOLD"
+     ],
+     "R2": [
+      "ADVANCE",
+      "ACCEL",
+      "HOLD"
+     ],
+     "R3": []
+    },
+    "reason": "B3: T=2",
+    "verdict": "CERTIFIED",
+    "wall_s": 0.005
+   },
+   "B4": {
+    "T": 2,
+    "cost": 0,
+    "limited": false,
+    "local_gap": 0,
+    "proven": true,
+    "reason": "B4 proven optimal",
+    "seed_agree": true,
+    "verdict": "TIE",
+    "wall_s": 0.557
+   },
+   "CAFA-J": {
+    "T": 2,
+    "cost": 0,
+    "false_safe": 0,
+    "plan": {
+     "R1": [
+      "ACCEL",
+      "HOLD"
+     ],
+     "R2": [
+      "ADVANCE",
+      "ACCEL",
+      "HOLD"
+     ],
+     "R3": []
+    },
+    "reason": "T=2",
+    "verdict": "CERTIFIED",
+    "wall_s": 0.136
+   }
+  },
+  "S5": {
+   "B0": {
+    "T": null,
+    "cost": null,
+    "false_safe": 0,
+    "reason": "B0: joint gate: R1 tube enters zone at t=4",
+    "verdict": "INFEASIBLE",
+    "wall_s": 0.003
+   },
+   "B1": {
+    "T": null,
+    "cost": null,
+    "false_safe": 0,
+    "reason": "B1: joint gate: R1 tube enters zone at t=7",
+    "verdict": "INFEASIBLE",
+    "wall_s": 0.012
+   },
+   "B2": {
+    "T": null,
+    "cost": null,
+    "false_safe": 0,
+    "reason": "B2: joint gate: R1 tube enters zone at t=6",
+    "verdict": "INFEASIBLE",
+    "wall_s": 0.005
+   },
+   "B3": {
+    "T": null,
+    "cost": null,
+    "false_safe": 0,
+    "reason": "B3: no timed T certifies",
+    "verdict": "INFEASIBLE",
+    "wall_s": 0.012
+   },
+   "B4": {
+    "T": null,
+    "cost": null,
+    "limited": true,
+    "local_gap": 0,
+    "proven": false,
+    "reason": "B4: node guard, no incumbent",
+    "seed_agree": true,
+    "verdict": "LIMIT",
+    "wall_s": 129.591
+   },
+   "CAFA-J": {
+    "T": 9,
+    "cost": 17,
+    "false_safe": 0,
+    "plan": {
+     "R1": [
+      "ADVANCE",
+      "ADVANCE",
+      "HOLD",
+      "ACCEL",
+      "ADVANCE"
+     ],
+     "R2": [
+      "ADVANCE",
+      "ACCEL",
+      "HOLD"
+     ]
+    },
+    "reason": "T=9",
+    "verdict": "CERTIFIED",
+    "wall_s": 25.814
+   }
+  },
+  "S6": {
+   "B0": {
+    "T": null,
+    "cost": null,
+    "false_safe": 0,
+    "reason": "B0: joint gate: R1 tube enters zone at t=5",
+    "verdict": "INFEASIBLE",
+    "wall_s": 0.487
+   },
+   "B1": {
+    "T": null,
+    "cost": null,
+    "false_safe": 0,
+    "reason": "B1: resume deadlocked",
+    "verdict": "INFEASIBLE",
+    "wall_s": 0.248
+   },
+   "B2": {
+    "T": null,
+    "cost": null,
+    "false_safe": 0,
+    "reason": "B2: R1 no greedy path",
+    "verdict": "INFEASIBLE",
+    "wall_s": 0.326
+   },
+   "B3": {
+    "T": null,
+    "cost": null,
+    "false_safe": 0,
+    "reason": "B3: no timed T certifies",
+    "verdict": "INFEASIBLE",
+    "wall_s": 0.021
+   },
+   "B4": {
+    "T": null,
+    "cost": null,
+    "limited": false,
+    "local_gap": null,
+    "proven": false,
+    "reason": "B4: no certified plan",
+    "seed_agree": true,
+    "verdict": "INFEASIBLE",
+    "wall_s": 0.011
+   },
+   "CAFA-J": {
+    "T": null,
+    "cost": null,
+    "false_safe": 0,
+    "reason": "no certified (order, T) in [C,D]",
+    "verdict": "INFEASIBLE",
+    "wall_s": 8.945
+   }
+  },
+  "S7": {
+   "B0": {
+    "T": null,
+    "cost": null,
+    "false_safe": 0,
+    "reason": "B0: joint gate: R1 tube enters zone at t=6",
+    "verdict": "INFEASIBLE",
+    "wall_s": 0.003
+   },
+   "B1": {
+    "T": 6,
+    "cost": 10,
+    "false_safe": 8,
+    "plan": {
+     "R1": [
+      "ADVANCE",
+      "ADVANCE",
+      "BRAKE",
+      "BRAKE"
+     ],
+     "R2": [
+      "ACCEL",
+      "ADVANCE",
+      "BRAKE",
+      "BRAKE"
+     ]
+    },
+    "reason": "B1: T=6",
+    "verdict": "CERTIFIED",
+    "wall_s": 0.006
+   },
+   "B2": {
+    "T": 2,
+    "cost": 0,
+    "false_safe": 8,
+    "plan": {
+     "R1": [
+      "ADVANCE",
+      "ADVANCE",
+      "HOLD"
+     ],
+     "R2": [
+      "ACCEL",
+      "ADVANCE",
+      "HOLD"
+     ]
+    },
+    "reason": "B2: T=2",
+    "verdict": "CERTIFIED",
+    "wall_s": 0.007
+   },
+   "B3": {
+    "T": 2,
+    "cost": 0,
+    "false_safe": 8,
+    "plan": {
+     "R1": [
+      "ADVANCE",
+      "ADVANCE",
+      "HOLD"
+     ],
+     "R2": [
+      "ACCEL",
+      "ADVANCE",
+      "HOLD"
+     ]
+    },
+    "reason": "B3: T=2",
+    "verdict": "CERTIFIED",
+    "wall_s": 0.006
+   },
+   "B4": {
+    "T": 2,
+    "cost": 0,
+    "limited": false,
+    "local_gap": 0,
+    "proven": true,
+    "reason": "B4 proven optimal",
+    "seed_agree": true,
+    "verdict": "TIE",
+    "wall_s": 0.674
+   },
+   "CAFA-J": {
+    "T": 2,
+    "cost": 0,
+    "false_safe": 8,
+    "plan": {
+     "R1": [
+      "ADVANCE",
+      "ADVANCE",
+      "HOLD"
+     ],
+     "R2": [
+      "ACCEL",
+      "ADVANCE",
+      "HOLD"
+     ]
+    },
+    "reason": "T=2",
+    "verdict": "CERTIFIED",
+    "wall_s": 0.162
+   }
+  },
+  "S8": {
+   "B0": {
+    "T": null,
+    "cost": null,
+    "false_safe": 0,
+    "reason": "B0: joint gate: R1 tube enters zone at t=4",
+    "verdict": "INFEASIBLE",
+    "wall_s": 0.145
+   },
+   "B1": {
+    "T": null,
+    "cost": null,
+    "false_safe": 0,
+    "reason": "B1: braking illegal",
+    "verdict": "INFEASIBLE",
+    "wall_s": 0.387
+   },
+   "B2": {
+    "T": null,
+    "cost": null,
+    "false_safe": 0,
+    "reason": "B2: joint gate: R1 suffix illegal from stale state",
+    "verdict": "INFEASIBLE",
+    "wall_s": 0.05
+   },
+   "B3": {
+    "T": null,
+    "cost": null,
+    "false_safe": 0,
+    "reason": "B3: no timed T certifies",
+    "verdict": "INFEASIBLE",
+    "wall_s": 0.026
+   },
+   "B4": {
+    "T": null,
+    "cost": null,
+    "limited": true,
+    "local_gap": null,
+    "proven": false,
+    "reason": "B4: node guard, no incumbent",
+    "seed_agree": true,
+    "verdict": "LIMIT",
+    "wall_s": 235.739
+   },
+   "CAFA-J": {
+    "T": null,
+    "cost": null,
+    "false_safe": 0,
+    "reason": "no certified (order, T) in [C,D]",
+    "verdict": "INFEASIBLE",
+    "wall_s": 39.119
+   }
+  },
+  "S9": {
+   "B0": {
+    "T": null,
+    "cost": null,
+    "false_safe": 0,
+    "reason": "B0: resume deadlocked",
+    "verdict": "INFEASIBLE",
+    "wall_s": 0.154
+   },
+   "B1": {
+    "T": null,
+    "cost": null,
+    "false_safe": 0,
+    "reason": "B1: resume deadlocked",
+    "verdict": "INFEASIBLE",
+    "wall_s": 0.195
+   },
+   "B2": {
+    "T": null,
+    "cost": null,
+    "false_safe": 0,
+    "reason": "B2: R1 no greedy path",
+    "verdict": "INFEASIBLE",
+    "wall_s": 0.027
+   },
+   "B3": {
+    "T": null,
+    "cost": null,
+    "false_safe": 0,
+    "reason": "B3: no timed T certifies",
+    "verdict": "INFEASIBLE",
+    "wall_s": 0.026
+   },
+   "B4": {
+    "T": null,
+    "cost": null,
+    "limited": true,
+    "local_gap": null,
+    "proven": false,
+    "reason": "B4 scope: >2 active robots",
+    "seed_agree": true,
+    "verdict": "LIMIT",
+    "wall_s": 0.0
+   },
+   "CAFA-J": {
+    "T": null,
+    "cost": null,
+    "false_safe": 0,
+    "reason": "no certified (order, T) in [C,D]",
+    "verdict": "INFEASIBLE",
+    "wall_s": 91.649
+   }
+  }
+ }
+}

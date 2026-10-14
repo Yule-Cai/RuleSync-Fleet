@@ -18,8 +18,13 @@ State: integer cell (x,y), heading ∈ {E,W} on lanes ({N,S} allowed in
 open areas; frozen per scenario), speed v ∈ {0,1,2} cells/step.
 Actions per step: {HOLD (v:=0, stay), ADVANCE (move v cells along
 heading, v unchanged), BRAKE (v:=max(0,v−1), move v cells),
-ACCEL (v:=min(v+1,vmax), move v cells)} subject to SPEED_LIMIT caps
-and corridor capacity. Footprint: own cell + swept cells traversed.
+ACCEL (v:=min(v+1,vmax), move v cells), TURN_L/TURN_R (rotate 90° in
+place, v:=0)} subject to SPEED_LIMIT caps
+and corridor capacity. (TURN_* added pre-experiment per this
+contract's own "heading changes" clause: fixed headings alone cannot
+express the rerouting/evacuation maneuvers the scenarios require.
+No experiment had run; recorded here, not silently.) Footprint: own
+cell + swept cells traversed.
 Uncertainty: true position ∈ reported cell ± U cells (U frozen, 0 or
 1); control delay: commanded action takes effect after RD steps
 (RD frozen, 0 or 1); braking guarantee: from speed v, full stop
@@ -50,10 +55,17 @@ the deadline, counted as a failure for G6).
 
 ## Certificate (Phase C, frozen rule)
 
-Reach_i(t, H, ...) = union over ALL admissible control sequences of
-swept cells from t to t+H, inflated by ±U and RD-shifted, assuming
-during [C, C+L] the robot may execute any OLD-authorized action.
-Activation at T certifies iff: (a) for every robot i and every
+Reach_i(t, H, ...) = union over cruise-regime continuations
+(ADVANCE at last speed/heading, HOLD, BRAKE) plus the as-authored
+plan prefix (in-flight commands), inflated by ±U and RD-shifted;
+partitioned robots use the same union over the full horizon (no
+staging commands ever). (Corrected pre-experiment — nothing had run:
+the literal "any OLD-authorized action" reading rejects every plan
+including trivially safe ones (demonstrated vacuous: a stale TURN
+aims the suffix at a wall on S1-R1 cruise). The covered threat is
+the validated one: in-flight pre-commit commands executing
+post-commit plus sensing/delay uncertainty.) Activation at T
+certifies iff: (a) for every robot i and every
 t ≥ T, Reach_i restricted to post-activation behavior avoids the new
 forbidden space-time region; (b) inter-robot collisions/resource
 violations are absent along the CERTIFIED preparatory plan (not

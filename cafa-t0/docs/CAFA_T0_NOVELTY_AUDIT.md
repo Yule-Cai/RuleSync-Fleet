@@ -182,6 +182,24 @@ Control Barrier Functions", ICRA 2024, 3478–3484
   mission/task-spec replanning (LTL/STL), NOT hard safety-rule
   activation with physical certificates + leases. DISTINCT.
 
+### N9. Conflict-Based Search — Sharon, Stern, Felner & Sturtevant,
+"Conflict-Based Search for Optimal Multi-Agent Pathfinding",
+Artificial Intelligence 219 (2015), 40–66 (+ K-CBS lineage for
+kinodynamic variants)
+- Link: https://doi.org/10.1016/j.artint.2014.09.006
+- Problem: optimal collaborative pathfinding (sum-of-costs) via
+  two-level search: low-level single-agent optima under constraints,
+  high-level conflict tree branching (forbid i / forbid j).
+- Mechanism/guarantee: optimal for additive costs with consistent
+  constraints; completeness via systematic conflict resolution.
+- Relation to CAFA: CBS is CAFA-J's SEARCH SUBSTRATE (adapted:
+  tube-compliant low-level completions, windowed-footprint
+  conflicts, activation-time outer scan, shared certificate gate).
+  Cited as foundation. The claimed substance (if gates pass) is the
+  ADAPTATION to certified rule activation under lease/partition
+  semantics with a joint downtime/latency objective — never CBS
+  itself. G7 explicitly tests this boundary (CAFA ≡ B3 ⇒ WEAK).
+
 ## Verdict rationale (pre-implementation)
 
 No single work solves information-constrained JOINT physical-rule

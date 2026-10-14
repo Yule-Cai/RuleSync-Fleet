@@ -23,11 +23,16 @@ uncertified T).
 
 Search state: (time t, joint physical states incl. speeds/headings,
 staged reservations, activated flag). Initial: scenario start at C
-(commit known). Transitions: joint actions (product of per-robot
-{HOLD, ADVANCE, BRAKE, ACCEL} pruned by caps/capacity) + a special
-ACTIVATE(t) transition enabled only if the certificate check passes
-for T = t. Goal: all tasks finished AND activated with T ≤ D.
-Costs accumulate per contract weights.
+(commit known). The joint planner is PRIORITIZED PLANNING OVER
+ORDERINGS (amended pre-experiment — nothing had run: joint Dijkstra
+explores cost plateaus × RD pipeline variants intractably, and CBS
+cell-time branching does not terminate under windowed-footprint
+conflicts. Prioritized enumeration is tractable and its exactness
+boundary is stated honestly in §7): for each permutation of robots,
+sequential tube-compliant low-level optima (exact single-robot
+Dijkstra under space-time reservations) avoiding earlier robots'
+full windowed traces; joint CERTIFIED gate on every assembled plan;
+min cost wins. Outer scan over T unchanged (exhaustive).
 
 ## 3. Pseudocode
 
@@ -39,11 +44,18 @@ Costs accumulate per contract weights.
         if CERTIFIED(π, T): return (π, T, cost)       # full joint certificate
     return INFEASIBLE                                 #_try in T order: earliest
     # certified T first → minimal latency bias; cost comparison below.
-    joint_search: A* with admissible heuristic h = Σ remaining shortest
-      path steps (ignoring coupling) + 0 latency term; expands joint
-      actions; prunes corridor conflicts, cap violations, and states
-      whose per-robot tube already intersects the future forbidden set
-      (sound pruning: only provably hopeless branches cut).
+    joint_search: PRIORITIZED PLANNING over all N! robot orderings
+      (amended pre-experiment — nothing had run; joint exact search
+      is intractable in this state space (cost plateaus × RD pipeline
+      variants; measured multi-minute per (scenario, T) with no
+      completion), and CBS cell-time branching does not terminate
+      under windowed-footprint conflicts (demonstrated 2700-node
+      ping-pong on S1). Per (order, T): sequential exact single-robot
+      optima (Dijkstra) under space-time reservations from earlier
+      robots' full windowed traces + own tube compliance; shared
+      CERTIFIED gate on every assembled plan; min cost wins. B4
+      (independent joint-Dijkstra engine, 2-active-robot scope) stays
+      the exact reference where computable (G4).
     CERTIFIED(π, T): exact tube check per §5 (enumerated control
       sequences up to H past T + braking tails to stop).
 
@@ -73,12 +85,22 @@ enumerator on all frozen instances — zero false-safe = G2).
 
 ## 7. Optimality / approximation
 
-Within the frozen discrete model, A* + admissible h + exhaustive T
-scan returns the optimal (π, T) pair: EXACT (no gap) — B4 cross-check
-(G4) must confirm equality on all instances, else report the gap
-mechanism honestly. No approximation is built in; if search limits
-are hit (frozen node cap), the run reports INFEASIBLE (never a
-truncated "best-effort" certificate) — node-cap hits counted.
+CAFA-J is a HEURISTIC (prioritized order enumeration). Joint optima
+requiring true simultaneity beyond orderings can be missed; the gap
+is measured against B4 where computable (G4), and B4 LIMITs bound
+the scope of that measurement. This is a deliberate, disclosed
+downgrade from "exact joint algorithm" (intractable here): the
+paper-level contribution, if gates pass, is certified joint
+activation PLANNING with measured wins — never an optimality claim
+beyond what G4 evidences. No approximation is hidden inside:
+low-level optima are exact under reservations; order coverage is
+total (all N! permutations); incompleteness comes only from
+interleaved sharing outside orderings. COMPLETION_CAP / heap-cap
+LIMITs report LIMIT (never a truncated certificate) — a LIMIT on
+any gate-relevant instance is disclosed as scope loss, not success.
+Known exactness boundary (predeclared): memoization is on full
+(t, joint-state) including RD pipeline state, so no
+prefix-dominance shortcut is taken anywhere — at the cost of speed.
 
 ## 8. Failure / infeasibility conditions (explicit)
 
@@ -92,10 +114,16 @@ if large).
 ## 9. Novelty limitation (self-declared, binds G7)
 
 CAFA-J combines: timed activation (N2) + worst-case reachability
-filtering (N6/gatekeeper) + centralized joint search (standard A*.
-If evaluation shows its decisions coincide with B3+braking-check on
-all coupled families (S10 generalized), the contribution reduces to
-"timed updates plus standard filtering" and the verdict MUST be
-NOVELTY_WEAK regardless of cost wins from tuning. G5 (Independent-
-Greedy insufficiency counterexample) + G3 (strict advantage on TWO
-coupled families) are the load-bearing gates.
+filtering (N6/gatekeeper) + prioritized multi-robot planning (a
+standard coordination pattern in the CBS/MAPF lineage — N9 is cited
+as prior art for the search family, never claimed). If evaluation
+shows its decisions coincide with B3+braking-check on all coupled
+families (S10 generalized), the contribution reduces to "timed
+updates plus standard filtering" and the verdict MUST be
+NOVELTY_WEAK regardless of cost wins from tuning. The claimed
+substance, if any survives G3/G5/G7, is the ADAPTATION
+(tube-certified activation-time co-optimization under lease/partition
+semantics with joint downtime/latency objective) — never the search,
+the filter, or the update abstraction alone. G5 (IndependentGreedy
+insufficiency counterexample) + G3 (strict advantage on TWO coupled
+families) are the load-bearing gates.

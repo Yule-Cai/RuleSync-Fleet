@@ -1,1 +1,546 @@
-{"coupled_families": {"A_corridor_order": ["S2", "S9"], "B_shared_blocker": ["S4", "S8"]}, "dynamics": {"B_table": {"1": 1, "2": 3}, "L_stale_steps": 2, "RD_steps": 1, "U_cells": 1, "corridor_capacity": 1, "speeds": [0, 1, 2]}, "grid": {"H": 6, "W": 12}, "horizon": 14, "objective": {"W_I": 1, "W_L": 2}, "scenarios": {"S1": {"C": 2, "D": 10, "coupling": "none", "desc": "Independent noninteracting robots; KEEP_OUT far from all paths.", "forbidden": {"x0": 9, "x1": 11, "y0": 4, "y1": 5}, "robots": [{"goal": [0, 4], "id": "R1", "start": [0, 0], "v": 1}, {"goal": [11, 0], "id": "R2", "start": [11, 4], "v": 1}, {"goal": [5, 5], "id": "R3", "start": [5, 1], "v": 1}]}, "S10": {"C": 2, "D": 10, "coupling": "none-tripwire", "desc": "Everyone already compliant; optimal must equal timed activation. CAFA beating B3 here = accounting bug.", "forbidden": {"x0": 9, "x1": 11, "y0": 4, "y1": 5}, "robots": [{"goal": [0, 4], "id": "R1", "start": [0, 0], "v": 1}, {"goal": [11, 0], "id": "R2", "start": [11, 4], "v": 1}]}, "S2": {"C": 2, "D": 12, "coupling": "family-A", "desc": "1-cell corridor x=5; R1 west-to-east and R2 east-to-west must both clear before KEEP_OUT covers the east exit.", "forbidden": {"x0": 6, "x1": 8, "y0": 2, "y1": 3}, "robots": [{"goal": [10, 2], "id": "R1", "start": [1, 2], "v": 2}, {"goal": [1, 3], "id": "R2", "start": [10, 3], "v": 2}, {"goal": [5, 0], "id": "R3", "start": [5, 5], "v": 1}]}, "S3": {"C": 2, "D": 12, "coupling": "single", "desc": "R1 at speed 2 one cell from the forbidden edge; must brake. Earliest feasible activation > C.", "forbidden": {"x0": 6, "x1": 11, "y0": 0, "y1": 5}, "robots": [{"goal": [4, 2], "id": "R1", "start": [4, 2], "v": 2}, {"goal": [0, 4], "id": "R2", "start": [0, 0], "v": 1}]}, "S4": {"C": 2, "D": 12, "coupling": "family-B", "desc": "R3 partitioned at C inside the approach; others must stage around its no-staging tube.", "forbidden": {"x0": 7, "x1": 11, "y0": 1, "y1": 4}, "partitioned": ["R3"], "robots": [{"goal": [5, 2], "id": "R1", "start": [1, 2], "v": 1}, {"goal": [5, 3], "id": "R2", "start": [1, 3], "v": 1}, {"goal": [6, 2], "id": "R3", "start": [6, 2], "v": 1}]}, "S5": {"C": 2, "D": 12, "coupling": "single-T0-counterexample", "desc": "R1 starts INSIDE the future KEEP_OUT. Immediate activation violates (T0 proof).", "forbidden": {"x0": 4, "x1": 7, "y0": 1, "y1": 4}, "robots": [{"goal": [1, 2], "id": "R1", "start": [5, 2], "v": 1}, {"goal": [0, 4], "id": "R2", "start": [0, 0], "v": 1}]}, "S6": {"C": 2, "D": 3, "coupling": "single-infeasible", "desc": "Urgent rule, infeasible deadline. All methods must return INFEASIBLE (scored as correct reporting, not performance).", "forbidden": {"x0": 0, "x1": 11, "y0": 0, "y1": 5}, "robots": [{"goal": [10, 2], "id": "R1", "start": [1, 2], "v": 2}, {"goal": [1, 2], "id": "R2", "start": [10, 2], "v": 2}]}, "S7": {"C": 2, "D": 12, "coupling": "single", "desc": "KEEP_OUT plus SPEED_LIMIT cap (v<=1) in the marked band, simultaneously.", "forbidden": {"x0": 7, "x1": 11, "y0": 0, "y1": 5}, "robots": [{"goal": [5, 2], "id": "R1", "start": [1, 2], "v": 2}, {"goal": [5, 3], "id": "R2", "start": [1, 3], "v": 1}], "speed_limit": {"cells": {"x0": 3, "x1": 6, "y0": 0, "y1": 5}, "vmax": 1}}, "S8": {"C": 2, "D": 12, "coupling": "family-B", "desc": "Single staging dock cell (8,0), capacity 1; both R1/R2 need it as pre-activation hold. Greedy races it.", "forbidden": {"x0": 9, "x1": 11, "y0": 1, "y1": 4}, "robots": [{"goal": [7, 2], "id": "R1", "start": [2, 2], "v": 1}, {"goal": [7, 3], "id": "R2", "start": [2, 4], "v": 1}], "staging_dock": [8, 0]}, "S9": {"C": 2, "D": 12, "coupling": "family-A", "desc": "Two activation orders (R1 clears corridor first vs R2 first) with different total downtime.", "forbidden": {"x0": 6, "x1": 11, "y0": 2, "y1": 3}, "robots": [{"goal": [10, 2], "id": "R1", "start": [2, 2], "v": 1}, {"goal": [10, 3], "id": "R2", "start": [2, 3], "v": 1}, {"goal": [5, 0], "id": "R3", "start": [5, 5], "v": 1}]}}}
+{
+ "coupled_families": {
+  "A_corridor_order": [
+   "S2",
+   "S9"
+  ],
+  "B_shared_blocker": [
+   "S4",
+   "S8"
+  ]
+ },
+ "dynamics": {
+  "B_table": {
+   "1": 1,
+   "2": 3
+  },
+  "L_stale_steps": 2,
+  "RD_steps": 1,
+  "U_cells": 1,
+  "corridor_capacity": 1,
+  "speeds": [
+   0,
+   1,
+   2
+  ]
+ },
+ "grid": {
+  "H": 6,
+  "W": 12
+ },
+ "horizon": 14,
+ "objective": {
+  "W_I": 1,
+  "W_L": 2
+ },
+ "scenarios": {
+  "S1": {
+   "C": 2,
+   "D": 10,
+   "coupling": "none",
+   "desc": "Independent noninteracting robots; KEEP_OUT far from all paths.",
+   "forbidden": {
+    "x0": 9,
+    "x1": 11,
+    "y0": 4,
+    "y1": 5
+   },
+   "robots": [
+    {
+     "goal": [
+      4,
+      0
+     ],
+     "hd": "E",
+     "id": "R1",
+     "start": [
+      0,
+      0
+     ],
+     "v": 1
+    },
+    {
+     "goal": [
+      2,
+      4
+     ],
+     "hd": "W",
+     "id": "R2",
+     "start": [
+      6,
+      4
+     ],
+     "v": 1
+    },
+    {
+     "goal": [
+      0,
+      1
+     ],
+     "hd": "E",
+     "id": "R3",
+     "start": [
+      0,
+      5
+     ],
+     "v": 1
+    }
+   ]
+  },
+  "S10": {
+   "C": 2,
+   "D": 10,
+   "coupling": "none-tripwire",
+   "desc": "Everyone already compliant; optimal must equal timed activation. CAFA beating B3 here = accounting bug.",
+   "forbidden": {
+    "x0": 9,
+    "x1": 11,
+    "y0": 4,
+    "y1": 5
+   },
+   "robots": [
+    {
+     "goal": [
+      4,
+      0
+     ],
+     "hd": "E",
+     "id": "R1",
+     "start": [
+      0,
+      0
+     ],
+     "v": 1
+    },
+    {
+     "goal": [
+      2,
+      4
+     ],
+     "hd": "W",
+     "id": "R2",
+     "start": [
+      6,
+      4
+     ],
+     "v": 1
+    }
+   ]
+  },
+  "S2": {
+   "C": 2,
+   "D": 12,
+   "coupling": "family-A",
+   "desc": "Head-on sharing of 1-cell door (5,2); R2 starts at zone edge and must clear west; order + deadline coupling.",
+   "forbidden": {
+    "x0": 10,
+    "x1": 11,
+    "y0": 2,
+    "y1": 3
+   },
+   "robots": [
+    {
+     "goal": [
+      8,
+      2
+     ],
+     "hd": "E",
+     "id": "R1",
+     "start": [
+      1,
+      2
+     ],
+     "v": 2
+    },
+    {
+     "goal": [
+      1,
+      2
+     ],
+     "hd": "W",
+     "id": "R2",
+     "start": [
+      10,
+      2
+     ],
+     "v": 2
+    },
+    {
+     "goal": [
+      0,
+      1
+     ],
+     "hd": "N",
+     "id": "R3",
+     "start": [
+      0,
+      5
+     ],
+     "v": 1
+    }
+   ],
+   "walls": [
+    [
+     5,
+     0
+    ],
+    [
+     5,
+     1
+    ],
+    [
+     5,
+     3
+    ],
+    [
+     5,
+     4
+    ],
+    [
+     5,
+     5
+    ]
+   ]
+  },
+  "S3": {
+   "C": 2,
+   "D": 12,
+   "coupling": "single",
+   "desc": "R1 at speed 2 one cell from the forbidden edge; must brake. Earliest feasible activation > C.",
+   "forbidden": {
+    "x0": 6,
+    "x1": 11,
+    "y0": 0,
+    "y1": 5
+   },
+   "robots": [
+    {
+     "goal": [
+      4,
+      2
+     ],
+     "hd": "E",
+     "id": "R1",
+     "start": [
+      1,
+      2
+     ],
+     "v": 2
+    },
+    {
+     "goal": [
+      4,
+      5
+     ],
+     "hd": "E",
+     "id": "R2",
+     "start": [
+      0,
+      5
+     ],
+     "v": 1
+    }
+   ]
+  },
+  "S4": {
+   "C": 2,
+   "D": 12,
+   "coupling": "family-B",
+   "desc": "R3 partitioned STOPPED in corner (tube tiny); fleet must proceed safely around it. Partition-safety agreement case.",
+   "forbidden": {
+    "x0": 7,
+    "x1": 11,
+    "y0": 1,
+    "y1": 3
+   },
+   "partitioned": [
+    "R3"
+   ],
+   "robots": [
+    {
+     "goal": [
+      4,
+      2
+     ],
+     "hd": "E",
+     "id": "R1",
+     "start": [
+      1,
+      2
+     ],
+     "v": 1
+    },
+    {
+     "goal": [
+      8,
+      5
+     ],
+     "hd": "E",
+     "id": "R2",
+     "start": [
+      4,
+      5
+     ],
+     "v": 1
+    },
+    {
+     "goal": [
+      0,
+      5
+     ],
+     "hd": "W",
+     "id": "R3",
+     "start": [
+      0,
+      5
+     ],
+     "v": 0
+    }
+   ]
+  },
+  "S5": {
+   "C": 2,
+   "D": 12,
+   "coupling": "single-T0-counterexample",
+   "desc": "R1 starts INSIDE the future KEEP_OUT. Immediate activation violates (T0 proof).",
+   "forbidden": {
+    "x0": 4,
+    "x1": 7,
+    "y0": 1,
+    "y1": 3
+   },
+   "robots": [
+    {
+     "goal": [
+      1,
+      2
+     ],
+     "hd": "W",
+     "id": "R1",
+     "start": [
+      5,
+      2
+     ],
+     "v": 1
+    },
+    {
+     "goal": [
+      4,
+      5
+     ],
+     "hd": "E",
+     "id": "R2",
+     "start": [
+      0,
+      5
+     ],
+     "v": 1
+    }
+   ]
+  },
+  "S6": {
+   "C": 2,
+   "D": 3,
+   "coupling": "single-infeasible",
+   "desc": "Urgent rule, infeasible deadline. All methods must return INFEASIBLE (scored as correct reporting, not performance).",
+   "forbidden": {
+    "x0": 0,
+    "x1": 11,
+    "y0": 0,
+    "y1": 5
+   },
+   "robots": [
+    {
+     "goal": [
+      10,
+      2
+     ],
+     "hd": "E",
+     "id": "R1",
+     "start": [
+      1,
+      2
+     ],
+     "v": 2
+    },
+    {
+     "goal": [
+      1,
+      2
+     ],
+     "hd": "W",
+     "id": "R2",
+     "start": [
+      10,
+      2
+     ],
+     "v": 2
+    }
+   ]
+  },
+  "S7": {
+   "C": 2,
+   "D": 12,
+   "coupling": "single",
+   "desc": "KEEP_OUT plus SPEED_LIMIT cap (v<=1) in the marked band, simultaneously.",
+   "forbidden": {
+    "x0": 7,
+    "x1": 11,
+    "y0": 0,
+    "y1": 5
+   },
+   "robots": [
+    {
+     "goal": [
+      5,
+      2
+     ],
+     "hd": "E",
+     "id": "R1",
+     "start": [
+      1,
+      2
+     ],
+     "v": 2
+    },
+    {
+     "goal": [
+      5,
+      5
+     ],
+     "hd": "E",
+     "id": "R2",
+     "start": [
+      1,
+      5
+     ],
+     "v": 1
+    }
+   ],
+   "speed_limit": {
+    "cells": {
+     "x0": 3,
+     "x1": 6,
+     "y0": 0,
+     "y1": 5
+    },
+    "vmax": 1
+   }
+  },
+  "S8": {
+   "C": 2,
+   "D": 12,
+   "coupling": "family-B",
+   "desc": "Perpendicular crossing at (5,2) inside zone (4-6,1-3); both must clear by T; crossing order changes cost.",
+   "forbidden": {
+    "x0": 4,
+    "x1": 6,
+    "y0": 1,
+    "y1": 3
+   },
+   "robots": [
+    {
+     "goal": [
+      8,
+      2
+     ],
+     "hd": "E",
+     "id": "R1",
+     "start": [
+      1,
+      2
+     ],
+     "v": 1
+    },
+    {
+     "goal": [
+      5,
+      5
+     ],
+     "hd": "S",
+     "id": "R2",
+     "start": [
+      5,
+      0
+     ],
+     "v": 1
+    }
+   ]
+  },
+  "S9": {
+   "C": 2,
+   "D": 12,
+   "coupling": "family-A",
+   "desc": "Head-on swap inside future zone (4-6,1-3) through door (5,2); both must clear by T; order changes downtime.",
+   "forbidden": {
+    "x0": 4,
+    "x1": 6,
+    "y0": 1,
+    "y1": 3
+   },
+   "robots": [
+    {
+     "goal": [
+      8,
+      2
+     ],
+     "hd": "E",
+     "id": "R1",
+     "start": [
+      2,
+      2
+     ],
+     "v": 1
+    },
+    {
+     "goal": [
+      2,
+      2
+     ],
+     "hd": "W",
+     "id": "R2",
+     "start": [
+      7,
+      2
+     ],
+     "v": 1
+    },
+    {
+     "goal": [
+      0,
+      1
+     ],
+     "hd": "N",
+     "id": "R3",
+     "start": [
+      0,
+      5
+     ],
+     "v": 1
+    }
+   ],
+   "walls": [
+    [
+     5,
+     0
+    ],
+    [
+     5,
+     1
+    ],
+    [
+     5,
+     3
+    ],
+    [
+     5,
+     4
+    ],
+    [
+     5,
+     5
+    ]
+   ]
+  }
+ }
+}
