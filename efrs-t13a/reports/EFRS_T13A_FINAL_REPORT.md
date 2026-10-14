@@ -137,6 +137,14 @@ BEST_EFFORT-superiority claim).
   +0.18 s post-restart); contr 0; stale 58.6 ms; rollbacks 0;
   ledger gate_ok (234/234). Teardown RCLError only (universal
   runner kill_all signature, post-COMMIT).
+- ORDER DEVIATION (disclosed, adjudication requested): the
+  CORR/DIAG executions ran BEFORE this amendment's commit (agent
+  sequencing error; the T1.3a freeze workflow was otherwise
+  commit-then-execute throughout). Code identity proven post-hoc:
+  executed files byte-identical to reviewed local copies and
+  unmodified since (mtimes predate runs; diffs recorded in commit).
+  No tuning occurred between execution and commit. The evidence
+  stands or falls on lead adjudication of this deviation.
 - F8/F9 diagnostics (once each): [1,2] / [1] (second propose(1)
   correctly refused post-commit), contr 0, ledgers clean.
 - N verdict: N_PASS_WITH_RESTART_AMENDMENT (original N FAIL retained).
@@ -222,8 +230,9 @@ branch/old-renewal×2/restart-ordering) locally + frozen container.
 
 219b4a7 (T1.2 freeze) → 2680322 (T1.3a runner correction) → 04bc365
 (T1.3a interim) → 0053bcb (validity ledger) → e20ba17 (A3 amendment)
-→ [restart amendment commit] → [this report]. Relay: Mac gh push +
-host reset --hard origin/main (verified each step).
+→ [restart amendment commit: this commit] → [this report, amended
+for the §15 order deviation]. Relay: Mac gh push + host reset --hard
+origin/main (verified each step).
 
 ## 24. Recommendation
 

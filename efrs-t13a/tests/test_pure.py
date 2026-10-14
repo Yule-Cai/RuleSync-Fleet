@@ -349,6 +349,54 @@ def test_normal_renew_keeps_frozen_semantics():
             f"{keeper} lost its adoption assignment"
 
 
+def test_restart_replay_ordering():
+    # Amendment A/B/C/D/E/F: the ONE-COMMIT restart replay publishes
+    # only after snap_hash()/pub() exist; exactly one site; frozen
+    # metadata; no new-epoch side effects; no heartbeat COMMIT.
+    import ast as _ast
+    p = (Path(__file__).resolve().parents[1] / "efrs_ros2" /
+         "coordinator" / "coordinator.py")
+    src = p.read_text()
+    tree = _ast.parse(src)
+    fns = {n.name: n for n in _ast.walk(tree)
+           if isinstance(n, _ast.FunctionDef)}
+    main_src_lines = src.splitlines()
+    defpos = {name: next(i for i, l in enumerate(main_src_lines)
+                         if l.strip().startswith(f"def {name}("))
+              for name in ("snap_hash", "pub", "propose", "decide",
+                           "heartbeat")}
+    replay_at = next(i for i, l in enumerate(main_src_lines)
+                     if "one COMMIT replay epoch" in l)
+    # B: replay after BOTH helper definitions.
+    assert replay_at > defpos["snap_hash"] and replay_at > defpos["pub"], \
+        "replay still precedes helper definitions"
+    # A: guarded by replay_epoch > 0 (empty WAL replays nothing).
+    seg = "\n".join(main_src_lines[max(0, replay_at - 12):replay_at])
+    assert "replay_epoch > 0" in seg, "replay not epoch-guarded"
+    # C: exactly one replay publish (total COMMIT sites unchanged at 3:
+    # broadcast propose, restart replay, decide).
+    assert src.count('pub("commit"') == 3, \
+        "COMMIT publish site count changed"
+    assert src.count("one COMMIT replay") == 1, \
+        "replay log/emission sites changed"
+    assert src.count("ONE COMMIT replay") == 1, \
+        "replay comment block changed"
+    # D: frozen metadata expressions present at the replay site.
+    wide = "\n".join(main_src_lines[max(0, replay_at - 14):replay_at + 3])
+    for frag in ("M.txn_id(replay_epoch", "snap_hash(replay_epoch)",
+                 'st["fence"]', "1000", "_re(replay_epoch)"):
+        assert frag in wide, f"replay metadata changed: {frag}"
+    # E: replay neither proposes nor advances the durable epoch.
+    assert "begin_attempt" not in wide and "propose(" not in wide, \
+        "replay triggers new attempts"
+    assert 'st["epoch"] =' not in wide and "st['epoch'] =" not in wide, \
+        "replay mutates durable epoch"
+    # F: heartbeat publishes no COMMIT (no redrive resurrected).
+    hb = _ast.dump(fns["heartbeat"])
+    assert "commit" not in hb.replace("committed", "").replace(
+        "commitment", ""), "COMMIT in heartbeat()"
+
+
 if __name__ == "__main__":
     test_msgspec_validation()
     test_shim_drop_duplicate_delay()
@@ -365,4 +413,5 @@ if __name__ == "__main__":
     test_loss_random_branch_schedules_clear()
     test_old_renewal_never_adopts()
     test_normal_renew_keeps_frozen_semantics()
+    test_restart_replay_ordering()
     print("efrs pure proofs passed")

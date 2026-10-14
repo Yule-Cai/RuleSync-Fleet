@@ -114,6 +114,7 @@ def main() -> None:
     # ground-truth reachability; identical harness for all protocols).
     REACH_MS = 2000
     last_seen: dict[str, int] = {}
+    replay_epoch = 0  # set from WAL below iff a durable commit exists
     if wal_path.exists():
         st["fence"] += 1
         node.get_logger().info(
@@ -138,17 +139,11 @@ def main() -> None:
                 f"restart: pending logical update epoch {st['pending']} "
                 f"(aborted gens kept: "
                 f"{sorted(g for (e, g) in st['aborted'] if e == st['pending'])})")
-        if committed_now > 0:
-            # T1.2 §D3: ONE COMMIT replay as restart recovery (not a
-            # loop). Robots that miss it catch up via reconcile-pull;
-            # robots that hold it no-op + ACK.
-            pub("commit", M.commit_msg(
-                M.txn_id(committed_now, snap_hash(committed_now),
-                         st["gen"].get(committed_now, 0)),
-                committed_now, snap_hash(committed_now), st["fence"],
-                1000, _re(committed_now)))
-            node.get_logger().info(
-                f"restart: one COMMIT replay epoch {committed_now}")
+        # Amendment (docs/EFRS_T13A_COORD_RESTART_AMENDMENT.md): record
+        # the replay epoch here; the single COMMIT replay publishes
+        # AFTER snap_hash()/pub() are defined below (UnboundLocalError
+        # otherwise). Contents identical to the pre-move block.
+        replay_epoch = committed_now if committed_now > 0 else 0
 
     def snap_hash(epoch: int) -> str:
         return _ch(_re(epoch))
@@ -161,6 +156,18 @@ def main() -> None:
                 publish_delayed(node, publisher, p, dms)
             else:
                 publish_json(publisher, p)
+
+    if replay_epoch > 0:
+        # ONE COMMIT replay as restart recovery (not a loop). Robots
+        # that miss it catch up via reconcile-pull; robots that hold
+        # it no-op + ACK.
+        pub("commit", M.commit_msg(
+            M.txn_id(replay_epoch, snap_hash(replay_epoch),
+                     st["gen"].get(replay_epoch, 0)),
+            replay_epoch, snap_hash(replay_epoch), st["fence"],
+            1000, _re(replay_epoch)))
+        node.get_logger().info(
+            f"restart: one COMMIT replay epoch {replay_epoch}")
 
     def txn_emit(kind, txn, epoch, gen, detail=""):
         if args.protocol != "efrs":
